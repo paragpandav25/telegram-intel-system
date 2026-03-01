@@ -26,6 +26,10 @@ jobs:
         run: |
           echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT }}' > service_account.json
 
+      - name: Create Telegram session file
+        run: |
+          echo "${{ secrets.TELEGRAM_SESSION }}" | base64 -d > session_name.session
+
       - name: Run Telegram Script
         env:
           API_ID: ${{ secrets.API_ID }}
