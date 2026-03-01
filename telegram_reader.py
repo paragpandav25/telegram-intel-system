@@ -42,6 +42,9 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(
 client_gs = gspread.authorize(creds)
 sheet = client_gs.open_by_key(SHEET_ID).worksheet("Messages")
 
+# Overwrite sheet daily
+sheet.clear()
+sheet.append_row(["Timestamp", "Channel", "Message"])
 
 # =========================
 # TELEGRAM FETCH FUNCTION
