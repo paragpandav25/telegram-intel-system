@@ -3,7 +3,7 @@ name: Telegram Intel System
 on:
   workflow_dispatch:   # Manual trigger button
   schedule:
-    - cron: "30 1 * * *"   # Runs daily at 2:30 UTC (adjust later if needed)
+    - cron: "30 1 * * *"   # Runs daily at 1:30 UTC (adjust later if needed)
 
 jobs:
   run-script:
