@@ -1,0 +1,35 @@
+name: Telegram Intel System
+
+on:
+  workflow_dispatch:   # Manual trigger button
+  schedule:
+    - cron: "30 2 * * *"   # Runs daily at 2:30 UTC (adjust later if needed)
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install telethon gspread oauth2client requests
+
+      - name: Create service account file
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT }}' > service_account.json
+
+      - name: Run Telegram Script
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+        run: |
+          python telegram_reader.py
