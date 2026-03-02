@@ -42,9 +42,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(
 client_gs = gspread.authorize(creds)
 sheet = client_gs.open_by_key(SHEET_ID).worksheet("Messages")
 
-# Overwrite sheet daily
-sheet.clear()
-sheet.append_row(["Timestamp", "Channel", "Message"])
+
 
 # =========================
 # TELEGRAM FETCH FUNCTION
@@ -57,6 +55,8 @@ async def fetch_messages():
 
         since_time = datetime.now(timezone.utc) - timedelta(days=1)
 
+        rows = [["Timestamp", "Channel", "Message"]]
+
         for channel in CHANNELS:
             async for message in client.iter_messages(channel):
 
@@ -64,11 +64,14 @@ async def fetch_messages():
                     break
 
                 if message.text:
-                    sheet.append_row([
+                    rows.append([
                         message.date.strftime("%Y-%m-%d %H:%M:%S"),
                         channel,
                         message.text
                     ])
+
+        # Single write call (IMPORTANT)
+        sheet.update("A1", rows)
 
         print("Done fetching messages.")
 
